@@ -34,8 +34,7 @@ class ProgressApp:
         self.root.geometry(f"{self.root.winfo_screenwidth()}x{self.root.winfo_screenheight()}")
 
         self.main_frame = tk.Frame(root, bg=BACKGROUND_COLOR)
-        self.main_frame.pack(expand=True, fill="both", padx=50, pady=50)
-
+        self.main_frame.pack(expand=True, fill="both", padx=80, pady=60)   # eskiden 50,50 idi → 80,60 yap
         self.label_title = tk.Label(
             self.main_frame,
             text="You are allotted 48 HOURS",
@@ -70,24 +69,25 @@ class ProgressApp:
 
         self.label = tk.Label(
             self.main_frame,
-            text= self.ransom_note,
-            font=("Arial", 16),
+            text=self.ransom_note,
+            font=("Arial", 14),               # fontu biraz küçülttük
             bg=BACKGROUND_COLOR,
             fg=TEXT_COLOR,
-            justify="center",
-            wraplength=800
+            justify="left",                   # sola yasla, taşma daha az olur
+            wraplength=1200,                  # ekranın çoğunu kaplasın (dene, gerekirse 1400 yap)
+            anchor="w",                       # sola daya
+            padx=30, pady=20                  # kenarlardan boşluk bırak
         )
-        self.label.pack(expand=True)
+        self.label.pack(expand=True, fill="both", padx=20, pady=10)  # hem yatay hem dikey doldursun
 
         self.label_instructions = tk.Label(
             self.main_frame,
-            text= self.payment_instructions,
+            text=self.payment_instructions,
             font=("Consolas", 14),
             bg=BACKGROUND_COLOR,
             fg=TEXT_COLOR,
             justify="left",
             wraplength=800
-
         )
         self.label_instructions.pack(pady=10, anchor='center')
 
