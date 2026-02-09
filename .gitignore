@@ -1,0 +1,8 @@
+.env
+*.pem
+*.key
+*.pfx
+config.json
+secrets/
+fernet_text_encrypt.py
+UI.py
